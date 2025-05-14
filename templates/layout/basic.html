@@ -1,0 +1,48 @@
+{% load draw_menu %}
+{% load static %}
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная{% endblock %} :: TreeMenu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <nav class="bg-white p-3 rounded shadow-sm">
+                    <a href="/" class="btn btn-primary w-100 mb-2">Главная</a>
+                    <ul class="nav flex-column">
+                        {% for parent in parent_menus %}
+                            <li class="nav-item {% if current_menu == parent %}active{% endif %}">
+                                <a href="{% url 'category:parent' parent.slug %}" class="nav-link d-flex justify-content-between align-items-center">
+                                    {{ parent.title }}
+                                    {% if parent.child.all %}
+                                    {% endif %}
+                                </a>
+                                {% if parent.child.all %}
+                                    <ul class="nav flex-column ms-3">
+                                        {% for child in parent.child.all %}
+                                            <li class="nav-item {% if current_menu == child %}active{% endif %}">
+                                                <a href="{% url 'category:child' parent.slug child.slug %}" class="nav-link">
+                                                    {{ child.title }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="col-md-9">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
